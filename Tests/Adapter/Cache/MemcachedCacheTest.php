@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * This file is part of the Sonata package.
  *
@@ -10,10 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonata\CacheBundle\Tests\Cache;
+namespace Sonata\CacheBundle\Tests\Adapter\Cache;
 
 use Sonata\CacheBundle\Adapter\MemcachedCache;
-use Symfony\Component\Routing\RouterInterface;
 use Sonata\CacheBundle\Cache\CacheElement;
 
 class MemcachedCacheTest extends \PHPUnit_Framework_TestCase
@@ -36,6 +34,11 @@ class MemcachedCacheTest extends \PHPUnit_Framework_TestCase
         }
 
         socket_close($socket);
+
+        $memcached = new \Memcached();
+        $memcached->addServer('127.0.0.1', 11211);
+
+        $memcached->fetchAll();
     }
 
     public function testInitCache()
@@ -54,7 +57,6 @@ class MemcachedCacheTest extends \PHPUnit_Framework_TestCase
         $cache->flush(array('id' => 42));
 
         $this->assertFalse($cache->has(array('id' => 42)));
-
 
         $cacheElement = $cache->get(array('id' => 7));
 

@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * This file is part of the Sonata package.
  *
@@ -10,24 +9,23 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonata\CacheBundle\Tests\Cache;
+namespace Sonata\CacheBundle\Tests\Adapter\Cache;
 
-use Sonata\CacheBundle\Adapter\SsiCache;
-use Symfony\Component\Routing\RouterInterface;
+use Sonata\CacheBundle\Adapter\VarnishCache;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class SsiCacheTest extends \PHPUnit_Framework_TestCase
+class VarnishCacheTest extends \PHPUnit_Framework_TestCase
 {
 
     public function testInitCache()
     {
         $router = $this->getMock('Symfony\Component\Routing\RouterInterface');
-        $router->expects($this->any())->method('generate')->will($this->returnValue('/cache/esi/TOKEN?controller=asdsad'));
+        $router->expects($this->any())->method('generate')->will($this->returnValue('http://sonata-project.org/cache/esi/TOKEN?controller=asdsad'));
 
         $resolver = $this->getMock('Symfony\Component\HttpKernel\Controller\ControllerResolverInterface');
 
-        $cache = new SsiCache('token', $router, $resolver);
+        $cache = new VarnishCache('token', array(), $router, 'ban', $resolver);
 
         $this->assertTrue($cache->flush(array()));
         $this->assertTrue($cache->flushAll());
@@ -42,7 +40,7 @@ class SsiCacheTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('Sonata\CacheBundle\Cache\CacheElement', $cacheElement);
 
-        $this->assertEquals('<!--# include virtual="/cache/esi/TOKEN?controller=asdsad" -->', $cacheElement->getData()->getContent());
+        $this->assertEquals('<esi:include src="http://sonata-project.org/cache/esi/TOKEN?controller=asdsad"/>', $cacheElement->getData()->getContent());
     }
 
     /**
@@ -59,7 +57,7 @@ class SsiCacheTest extends \PHPUnit_Framework_TestCase
             'token' => 'wrong'
         ));
 
-        $cache = new SsiCache('token', $router, $resolver);
+        $cache = new VarnishCache('token', array(), $router, 'ban', $resolver);
         $cache->cacheAction($request);
     }
 
@@ -79,7 +77,7 @@ class SsiCacheTest extends \PHPUnit_Framework_TestCase
             )
         ));
 
-        $cache = new SsiCache('token', $router, $resolver);
+        $cache = new VarnishCache('token', array(), $router, 'ban', $resolver);
         $cache->cacheAction($request);
     }
 }

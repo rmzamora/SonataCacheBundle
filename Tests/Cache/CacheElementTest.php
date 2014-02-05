@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * This file is part of the Sonata package.
  *
@@ -32,6 +31,9 @@ class CacheElementTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($cache->isExpired());
 
         $this->assertEquals('data', $cache->getData());
+
+        $cache->getExpirationDate();
+        
     }
 
     public function testContextual()

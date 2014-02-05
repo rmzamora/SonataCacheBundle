@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * This file is part of the Sonata package.
  *
@@ -10,16 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonata\CacheBundle\Tests\Cache;
+namespace Sonata\CacheBundle\Tests\Adapter\Cache;
 
-use Sonata\CacheBundle\Adapter\MongoCache;
+use Sonata\CacheBundle\Adapter\PRedisCache;
+use Predis\Client;
 
-class MongoCacheTest extends \PHPUnit_Framework_TestCase
+class PRedisCacheTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        if (!class_exists('\Mongo', true)) {
-            $this->markTestSkipped('Mongo is not installed');
+        if (!class_exists('\Predis\Client', true)) {
+            $this->markTestSkipped('PRedis is not installed');
         }
 
         $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
@@ -27,18 +27,30 @@ class MongoCacheTest extends \PHPUnit_Framework_TestCase
         // setup the default timeout (avoid max execution time)
         socket_set_option($socket, SOL_SOCKET, SO_SNDTIMEO, array('sec' => 1, 'usec' => 0));
 
-        $result = @socket_connect($socket, '127.0.0.1', 27017);
+        $result = @socket_connect($socket, '127.0.0.1', 6379);
+
+        if (!$result) {
+            $this->markTestSkipped('Redis is not running');
+        }
 
         socket_close($socket);
 
-        if (!$result) {
-            $this->markTestSkipped('MongoDB is not running');
-        }
+        $client = new Client(array(
+            'host'     => '127.0.0.1',
+            'port'     => 6379,
+            'database' => 42
+        ));
+
+        $client->flushdb();
     }
 
     public function testInitCache()
     {
-        $cache = new MongoCache(array('127.0.0.1:27017'), 'sonata_cache_test', 'cache');
+        $cache = new PRedisCache(array(
+            'host'     => '127.0.0.1',
+            'port'     => 6379,
+            'database' => 42
+        ));
 
         $cache->set(array('id' => 7), 'data');
         $cacheElement = $cache->set(array('id' => 42), 'data');
@@ -50,7 +62,6 @@ class MongoCacheTest extends \PHPUnit_Framework_TestCase
         $cache->flush(array('id' => 42));
 
         $this->assertFalse($cache->has(array('id' => 42)));
-
 
         $cacheElement = $cache->get(array('id' => 7));
 

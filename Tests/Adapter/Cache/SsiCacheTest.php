@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * This file is part of the Sonata package.
  *
@@ -10,25 +9,24 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonata\CacheBundle\Tests\Cache;
+namespace Sonata\CacheBundle\Tests\Adapter\Cache;
 
-use Sonata\CacheBundle\Adapter\EsiCache;
+use Sonata\CacheBundle\Adapter\SsiCache;
 use Symfony\Component\Routing\RouterInterface;
-use Sonata\CacheBundle\Cache\CacheElement;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class EsiCacheTest extends \PHPUnit_Framework_TestCase
+class SsiCacheTest extends \PHPUnit_Framework_TestCase
 {
 
     public function testInitCache()
     {
         $router = $this->getMock('Symfony\Component\Routing\RouterInterface');
-        $router->expects($this->any())->method('generate')->will($this->returnValue('http://sonata-project.org/cache/esi/TOKEN?controller=asdsad'));
+        $router->expects($this->any())->method('generate')->will($this->returnValue('/cache/esi/TOKEN?controller=asdsad'));
 
         $resolver = $this->getMock('Symfony\Component\HttpKernel\Controller\ControllerResolverInterface');
 
-        $cache = new EsiCache('token', array(), $router, $resolver);
+        $cache = new SsiCache('token', $router, $resolver);
 
         $this->assertTrue($cache->flush(array()));
         $this->assertTrue($cache->flushAll());
@@ -43,7 +41,7 @@ class EsiCacheTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('Sonata\CacheBundle\Cache\CacheElement', $cacheElement);
 
-        $this->assertEquals('<esi:include src="http://sonata-project.org/cache/esi/TOKEN?controller=asdsad"/>', $cacheElement->getData()->getContent());
+        $this->assertEquals('<!--# include virtual="/cache/esi/TOKEN?controller=asdsad" -->', $cacheElement->getData()->getContent());
     }
 
     /**
@@ -60,7 +58,7 @@ class EsiCacheTest extends \PHPUnit_Framework_TestCase
             'token' => 'wrong'
         ));
 
-        $cache = new EsiCache('token', array(), $router, $resolver);
+        $cache = new SsiCache('token', $router, $resolver);
         $cache->cacheAction($request);
     }
 
@@ -72,7 +70,6 @@ class EsiCacheTest extends \PHPUnit_Framework_TestCase
         $resolver->expects($this->any())->method('getController')->will($this->returnValue(function() { return new Response(); }));
         $resolver->expects($this->any())->method('getArguments')->will($this->returnValue(array()));
 
-
         $request = Request::create('cache/esi/TOKEN', 'get', array(
             'token' => '44befdbd93f304ea693023aa6587729bed76a206ecdacfd9bbd9b43fcf2e1664',
             'parameters' => array(
@@ -81,7 +78,7 @@ class EsiCacheTest extends \PHPUnit_Framework_TestCase
             )
         ));
 
-        $cache = new EsiCache('token', array(), $router, $resolver);
+        $cache = new SsiCache('token', $router, $resolver);
         $cache->cacheAction($request);
     }
 }

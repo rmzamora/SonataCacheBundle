@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the Sonata project.
  *
@@ -11,22 +12,24 @@
 namespace Sonata\CacheBundle\Cache;
 
 use Sonata\CacheBundle\Cache\CacheInterface;
-use Sonata\CacheBundle\Cache\CacheElement;
-use Sonata\CacheBundle\Invalidation\InvalidationInterface;
 use Sonata\CacheBundle\Invalidation\Recorder;
 
 interface CacheManagerInterface
 {
     /**
-     * @param $name
-     * @param \Sonata\CacheBundle\Cache\CacheInterface $cacheManager
-     * @return void
+     * Adds a cache service
+     *
+     * @param string         $name         A cache name
+     * @param CacheInterface $cacheManager A cache service
      */
     function addCacheService($name, CacheInterface $cacheManager);
 
     /**
-     * @param $name
-     * @return \Sonata\CacheBundle\Cache\CacheInterface
+     * Gets a cache service by a given name
+     *
+     * @param string $name A cache name
+     *
+     * @return CacheInterface
      */
     function getCacheService($name);
 
@@ -38,26 +41,32 @@ interface CacheManagerInterface
     function getCacheServices();
 
     /**
+     * Returns TRUE whether a cache service identified by id exists
      *
-     * @param sring $id
+     * @param string $id
+     *
      * @return boolean
      */
     function hasCacheService($id);
 
     /**
+     * Invalidates the cache by the given keys
+     *
      * @param array $keys
-     * @return void
      */
     function invalidate(array $keys);
 
     /**
-     * @param \Sonata\CacheBundle\Invalidation\Recorder $recorder
-     * @return void
+     * Sets the recorder
+     *
+     * @param Recorder $recorder
      */
     function setRecorder(Recorder $recorder);
 
     /**
-     * @return \Sonata\CacheBundle\Invalidation\Recorder
+     * Gets the recorder
+     *
+     * @return Recorder
      */
     function getRecorder();
 }
