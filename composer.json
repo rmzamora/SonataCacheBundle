@@ -26,7 +26,7 @@
         "symfony/routing": "~2.4",
         "symfony/security": "~2.4",
         "symfony/process": "~2.4",
-        "rmzamora/cache-bundle": "~1.0@dev"
+        "rmzamora/cache": "~1.0@dev"
     },
     "require-dev": {
         "doctrine/orm": "~2.2",
