@@ -49,7 +49,7 @@ class ApcCache extends BaseApcCache
      */
     protected function getUrl()
     {
-        $this->router->generate('sonata_cache_apc', array('token' => $this->token));
+        return $this->router->generate('sonata_cache_apc', array('token' => $this->token));
     }
 
     /**
@@ -65,6 +65,7 @@ class ApcCache extends BaseApcCache
     {
         if ($this->token == $token) {
             apc_clear_cache('user');
+            apc_clear_cache();
 
             return new Response('ok', 200, array(
                 'Cache-Control'  => 'no-cache, must-revalidate',
