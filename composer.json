@@ -22,11 +22,11 @@
         }
     ],
     "require": {
-        "symfony/http-foundation": "~2.4",
-        "symfony/filesystem": "~2.4",
-        "symfony/routing": "~2.4",
-        "symfony/security": "~2.4",
-        "symfony/process": "~2.4",        
+        "symfony/http-foundation": "~2.4|~3.0",
+        "symfony/filesystem": "~2.4|~3.0",
+        "symfony/routing": "~2.4|~3.0",
+        "symfony/security": "~2.4|~3.0",
+        "symfony/process": "~2.4|~3.0",
         "rmzamora/cache": "2.5.0.*"
     },
     "require-dev": {
