@@ -22,19 +22,19 @@
         }
     ],
     "require": {
-        "symfony/http-foundation": "~2.4|~3.0",
-        "symfony/filesystem": "~2.4|~3.0",
-        "symfony/routing": "~2.4|~3.0",
-        "symfony/security": "~2.4|~3.0",
-        "symfony/process": "~2.4|~3.0",
+        "php": "^5.3 || ^7.0",
+        "symfony/config": "^2.2 || ^3.0",
+        "symfony/filesystem": "^2.2 || ^3.0",
+        "symfony/http-foundation": "^2.2 || ^3.0",
+        "symfony/routing": "^2.2 || ^3.0",
+        "symfony/security": "^2.2 || ^3.0",
+        "symfony/process": "^2.2 || ^3.0",
         "rmzamora/cache": "2.5.0.*"
     },
     "require-dev": {
         "doctrine/orm": "~2.2",
         "predis/predis": "~0.8",
         "symfony/phpunit-bridge": "~2.7|~3.0",
-        "fabpot/php-cs-fixer": "~0.5|~1.0",
-        "rmzamora/cache": "2.5.0.*"
     },
     "suggest": {
         "doctrine/doctrine-bundle": "ORM support",
